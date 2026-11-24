@@ -37,16 +37,19 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|min:4',
             'price' => 'required|integer|min:1000000',
         ]);
-        /* $prod = new Product;
+        $prod = new Product;
         $prod->name = $request->name;
         $prod->price = $request->price;
-        $prod->save(); */
-        Product::create($validated);
-        return redirect()->route('product.index')->with('success', 'Produk berhasil ditambahkan');
+        $prod->save();
+        if (request()->segment(1) == 'api') return response()->json([
+            'error' => false,
+            'message' => 'Produk berhasil ditambah',
+        ], 200);
+        return redirect('/produk')->with('message', 'Produk berhasil ditambah');
     }
 
     /**
